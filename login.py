@@ -21,3 +21,9 @@ def api_login():
     # grant/deny access via JSOownedN credentials
     return r.json()
 
+@login.route('/api/teapot', methods=["POST"])
+def test_teapot():
+    r = requests.get("https://shielded-ridge-12044.herokuapp.com")
+    return r.text
+    
+    
