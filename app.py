@@ -2,11 +2,13 @@ from flask import Flask, request
 from login import login
 from sitemap import sitemap
 from questions import questions
+from exams import exams
 import logging
 app = Flask(__name__)
 app.register_blueprint(login)
 app.register_blueprint(sitemap)
 app.register_blueprint(questions)
+app.register_blueprint(exams)
 
 @app.route("/api/__health")
 def health():
