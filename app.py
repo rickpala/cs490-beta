@@ -1,14 +1,22 @@
 from flask import Flask, request
 from login import login
 from sitemap import sitemap
+from questions import questions
 import logging
 app = Flask(__name__)
 app.register_blueprint(login)
 app.register_blueprint(sitemap)
+app.register_blueprint(questions)
 
 @app.route("/api/__health")
 def health():
     return "OK"
+
+@app.route('/api/teapot', methods=["GET", "POST"])
+def test_teapot():
+    """Makes a request to another web server on behalf of the user."""
+    r = requests.get("https://shielded-ridge-12044.herokuapp.com")
+    return r.text
 
 if __name__ == '__main__':
     gunicorn_logger = logging.getLogger('gunicorn.error')
