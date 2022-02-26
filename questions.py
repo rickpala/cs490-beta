@@ -7,6 +7,9 @@ questions = Blueprint('questions', __name__)
 
 @questions.route("/api/questions/new", methods=["POST"])
 def question_new():
+    """
+
+    """
     data = request.json
     app.logger.debug(data)
     # validate all keys exist
@@ -14,10 +17,10 @@ def question_new():
     if keys_missing(req_keys, data):
         return flask.jsonify({"error": "missing keys"}), 400
 
-    if keys_missing(["callSignature", "answer", "type"], data["testCases"]):
-        pass # TODO: Validate testCases
+    if keys_missing(["functionCall", "expectedOutput", "type"], data["testCases"]):
+        return flask.jsonify({"error": "missing keys in testCases"}), 400
 
-    return flask.jsonify({}), 200
+    return flask.jsonify({"status": "Good, all keys present. Backend not reached."}), 200
 
     # hand off to database to insert 
     r = requests.post(f"{BACKEND_URL}/new_question", json=data)
