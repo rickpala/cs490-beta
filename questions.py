@@ -13,11 +13,10 @@ def question_new():
     req_keys = ["title", "description", "topic", "difficulty", "testCases"]
     if (keys_missing(req_keys, data) or 
         keys_missing(["callSignature", "answer"], data["testCases"])):
-        return jsonify({"error": "missing keys"}), 400
+        return flask.jsonify({"error": "missing keys"}), 400
 
     # hand off to database to insert 
-    r = requests.post(f"{BACKEND}/new_question", json=data)
+    r = requests.post(f"{BACKEND_URL}/new_question", json=data)
 
     if r.status_code in [200, 201]:
         return r.status_code
-
