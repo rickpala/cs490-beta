@@ -11,9 +11,11 @@ def question_new():
     app.logger.debug(data)
     # validate all keys exist
     req_keys = ["title", "description", "topic", "difficulty", "testCases"]
-    if (keys_missing(req_keys, data) or 
-        keys_missing(["callSignature", "answer"], data["testCases"])):
+    if keys_missing(req_keys, data):
         return flask.jsonify({"error": "missing keys"}), 400
+
+    if keys_missing(["callSignature", "answer", "type"], data["testCases"]):
+        pass # TODO: Validate testCases
 
     # hand off to database to insert 
     r = requests.post(f"{BACKEND_URL}/new_question", json=data)
