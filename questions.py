@@ -7,7 +7,7 @@ questions = Blueprint('questions', __name__)
 
 @questions.route("/api/questions/new", methods=["POST"])
 def question_new():
-    data = request.data
+    data = request.json
     app.logger.debug(data)
     # validate all keys exist
     req_keys = ["title", "description", "topic", "difficulty", "testCases"]
