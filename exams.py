@@ -1,8 +1,12 @@
-from flask import Blueprint, request, current_app as app
-from typing import List, Dict
-from app_utils import *
+from typing import Dict, List
+
 import flask
 import requests
+from flask import Blueprint
+from flask import current_app as app
+from flask import request
+
+from app_utils import *
 
 exams = Blueprint('exams', __name__)
 
@@ -19,11 +23,6 @@ def new_exam():
     Example JSON body:
         {
             "teacherID": "teacherID_001",  /* via Cookie */
-            "assignees": [
-                "studentID_001",
-                "studentID_002",
-                ...
-            ],
             "questions": [{
                 "questionID": "questionID_001",
                 "points": 10
@@ -39,8 +38,29 @@ def new_exam():
             "examID": "examID_008" /* after db insert */
         }, 201)
     """
-    return 501  # Not Implemented
+    # TODO: Assign exam to specific students
+    backend_endpoint = f"{BACKEND_URL}/new_exam"
+    data = request.json
+    req_keys = {"root": ["teacherID", "questions"],
+                "questions": ["questionID", "points"]}
 
+    if not data:
+        return flask.jsonify({"error", "missing JSON data"}), 400
+    elif keys_missing(req_keys["root"], data):
+        return flask.jsonify({"error": "missing keys in form data"}), 400
+    elif keys_missing(req_keys["questions"], data.get("questions")):
+        return flask.jsonify({"error": "missing keys in questions"}), 400
+
+    try:  # Reach backend to insert into DB
+        app.logger.info(f"Attempting to communicate to {backend_endpoint}")
+        # TODO: Convert `data` into 3NF for individual insertion to backend
+        r = requests.post(f"{backend_endpoint}", json=data)
+        if r.status_code in [200, 201]:
+            app.logger.info(f"Backend returned {r.status_code}")
+            return r.status_code
+    except Exception as e:
+        app.logger.debug(e)
+        return flask.jsonify({"error": "backend didn't return valid response"})
 
 @exams.route("/api/exam/submit", methods=["POST"])
 def submit_exam():
@@ -66,4 +86,29 @@ def submit_exam():
             "submissionID": "submissionID_001" /* after db insert */
         }, 201)
     """
-    return 501  # Not Implemented
+    # Constants
+    data = request.json
+    backend_endpoint = f"{BACKEND_URL}/submit_exam"
+    req_keys = {"root": ["examID", "studentID", "submission"],
+                "submission": ["questionID", "response"]}
+
+    if not data:
+        return flask.jsonify({"error", "missing POSTed JSON"}), 400
+    elif keys_missing(req_keys["root"], data):
+        return flask.jsonify({"error": "missing keys in form data"}), 400
+    elif keys_missing(req_keys["submission"], data.get("submission")):
+        return flask.jsonify({"error": "missing keys in submission"}), 400
+
+    try:  # Reach backend to insert into DB
+        app.logger.info(f"Attempting to communicate to {backend_endpoint}")
+        # TODO: Insert new submission as [examID, studentID, submission]
+        # TODO: Insert individual question submissions 
+        # TODO: Convert `data` into 3NF for individual insertion to backend
+        
+        r = requests.post(backend_endpoint, json=data)
+        if r.status_code in [200, 201]:
+            app.logger.info(f"Backend returned HTTP {r.status_code}")
+            return r.status_code
+    except Exception as e:
+        app.logger.debug(e)
+        return flask.jsonify({"error": "backend didn't return valid response"})
