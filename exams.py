@@ -45,19 +45,18 @@ def new_exam():
                 "questions": ["questionID", "points"]}
 
     if not data:
-        return flask.jsonify({"error", "missing JSON data"}), 400
-    elif keys_missing(req_keys["root"], data):
+        return flask.jsonify({"error": "missing JSON data"}), 400
+    if keys_missing(req_keys["root"], data):
         return flask.jsonify({"error": "missing keys in form data"}), 400
-    elif keys_missing(req_keys["questions"], data.get("questions")):
+    if keys_missing(req_keys["questions"], data.get("questions")):
         return flask.jsonify({"error": "missing keys in questions"}), 400
 
     try:  # Reach backend to insert into DB
         app.logger.info(f"Attempting to communicate to {backend_endpoint}")
         # TODO: Convert `data` into 3NF for individual insertion to backend
         r = requests.post(f"{backend_endpoint}", json=data)
-        if r.status_code in [200, 201]:
-            app.logger.info(f"Backend returned {r.status_code}")
-            return r.status_code
+        app.logger.info(f"Backend returned {r.status_code}")
+        return flask.jsonify({"status": r.status_code}), r.status_code
     except Exception as e:
         app.logger.debug(e)
         return flask.jsonify({"error": "backend didn't return valid response"})
@@ -93,7 +92,7 @@ def submit_exam():
                 "submission": ["questionID", "response"]}
 
     if not data:
-        return flask.jsonify({"error", "missing POSTed JSON"}), 400
+        return flask.jsonify({"error": "missing POSTed JSON"}), 400
     elif keys_missing(req_keys["root"], data):
         return flask.jsonify({"error": "missing keys in form data"}), 400
     elif keys_missing(req_keys["submission"], data.get("submission")):
@@ -104,11 +103,10 @@ def submit_exam():
         # TODO: Insert new submission as [examID, studentID, submission]
         # TODO: Insert individual question submissions 
         # TODO: Convert `data` into 3NF for individual insertion to backend
-        
+
         r = requests.post(backend_endpoint, json=data)
-        if r.status_code in [200, 201]:
-            app.logger.info(f"Backend returned HTTP {r.status_code}")
-            return r.status_code
+        app.logger.info(f"Backend returned HTTP {r.status_code}")
+        return flask.jsonify({"status": r.status_code}), 400
     except Exception as e:
         app.logger.debug(e)
         return flask.jsonify({"error": "backend didn't return valid response"})
