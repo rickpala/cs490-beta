@@ -24,7 +24,7 @@ def new_exam():
                 "studentID_002",
                 ...
             ],
-            questions": [{
+            "questions": [{
                 "questionID": "questionID_001",
                 "points": 10
             },
