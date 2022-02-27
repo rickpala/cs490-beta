@@ -12,8 +12,8 @@ exams = Blueprint('exams', __name__)
 
 @exams.route("/api/questions/show", methods=["GET"])
 def show_questions():
-    r = requests.get(f"{BACKEND_URL}/all_questions")
-    return 501  # Not Implemented
+    r = requests.get(f"{BACKEND_URL}/question_bank")
+    return r.json, r.status_code
 
 @exams.route("/api/exam/new", methods=["POST"])
 def new_exam():
