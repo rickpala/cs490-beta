@@ -12,7 +12,7 @@ def question_new():
     
     Example JSON Body:
         {
-            "teacherID": "teacherID_001",
+            "professorID": "professorID_001",
             "title": "Double it",
             "description": "Write a function named `doubleIt`...",
             "topic": "functions",

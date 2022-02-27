@@ -22,7 +22,7 @@ def new_exam():
     
     Example JSON body:
         {
-            "teacherID": "teacherID_001",  /* via Cookie */
+            "professorID": "professorID_001",  /* via Cookie */
             "questions": [{
                 "questionID": "questionID_001",
                 "points": 10
@@ -41,7 +41,7 @@ def new_exam():
     # TODO: Assign exam to specific students
     backend_endpoint = f"{BACKEND_URL}/new_exam"
     data = request.json
-    req_keys = {"root": ["teacherID", "questions"],
+    req_keys = {"root": ["professorID", "questions"],
                 "questions": ["questionID", "points"]}
 
     if not data:
