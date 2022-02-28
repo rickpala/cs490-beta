@@ -15,7 +15,7 @@ def question_new():
             "professorID": "professorID_001",
             "title": "Double it",
             "description": "Write a function named `doubleIt`...",
-            "topic": "functions",
+            "category": "functions",
             "difficulty": "easy",
             "testCases": [{
                 "functionCall": "doubleIt(3)",
@@ -32,17 +32,14 @@ def question_new():
     data = request.json
     app.logger.debug(data)
     # validate all keys exist
-    req_keys = ["title", "description", "topic", "difficulty", "testCases"]
+    req_keys = ["title", "description", "category", "difficulty", "testCases"]
     if keys_missing(req_keys, data):
         return flask.jsonify({"error": "missing keys in form data"}), 400
 
     if keys_missing(["functionCall", "expectedOutput", "type"], data["testCases"]):
         return flask.jsonify({"error": "missing keys in testCases"}), 400
 
-    return flask.jsonify({"status": "Good, all keys present. Backend not reached."}), 200
-
     # hand off to database to insert 
     r = requests.post(f"{BACKEND_URL}/new_question", json=data)
 
-    if r.status_code in [200, 201]:
-        return r.status_code
+    return flask.jsonify(r.json), r.status_code
