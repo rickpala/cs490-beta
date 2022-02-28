@@ -4,6 +4,7 @@ from sitemap import sitemap
 from questions import questions
 from exams import exams
 import logging
+import requests
 app = Flask(__name__)
 app.register_blueprint(login)
 app.register_blueprint(sitemap)
