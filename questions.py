@@ -30,7 +30,7 @@ def question_new():
         }, 201)
     """
     data = request.json
-    app.logger.debug(data)
+    print(data)
     # validate all keys exist
     req_keys = ["professorID", "title", "description", "category", "difficulty", "testCases"]
     if keys_missing(req_keys, data):
@@ -41,5 +41,6 @@ def question_new():
 
     # hand off to database to insert 
     r = requests.post(f"{BACKEND_URL}/new_question", json=data)
-
+    print(r.text)
+    print(r.json)
     return flask.jsonify(r.json), r.status_code
