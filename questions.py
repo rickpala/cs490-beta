@@ -32,7 +32,7 @@ def question_new():
     data = request.json
     app.logger.debug(data)
     # validate all keys exist
-    req_keys = ["title", "description", "category", "difficulty", "testCases"]
+    req_keys = ["professorID", "title", "description", "category", "difficulty", "testCases"]
     if keys_missing(req_keys, data):
         return flask.jsonify({"error": "missing keys in form data"}), 400
 
