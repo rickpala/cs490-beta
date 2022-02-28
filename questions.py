@@ -43,4 +43,4 @@ def question_new():
     r = requests.post(f"{BACKEND_URL}/new_question", json=data)
     print(r.text)
     print(r.json)
-    return flask.jsonify(r.json), r.status_code
+    return flask.jsonify(r.text), r.status_code
